@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SelectApp {
 
-    private Connection connect() {
+    private Connection connect() throws SQLException {
         String url = "jdbc:sqlite:banking";
         Connection con = null;
 
@@ -19,7 +19,7 @@ public class SelectApp {
     }
 
     public String selectNumber() {
-        String sql = "SELECT number FROM card WHERE number is number ORDER BY ROWID DESC LIMIT 1";
+        String sql = "SELECT number FROM card WHERE number is card.number ORDER BY ROWID DESC LIMIT 1";
 
         String res = "";
         try (Connection con = this.connect();
@@ -81,5 +81,21 @@ public class SelectApp {
             e.printStackTrace();
         }
         return allPins;
+    }
+
+    public int selectBalance(String numberCheck) {
+        String sql = "SELECT balance FROM card WHERE number =" + numberCheck;
+
+        int res = 0;
+        try (Connection con = this.connect();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            res = rs.getInt("balance");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 }
