@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class InsertApp {
+public class CreateApp {
 
     private Connection connect() {
         String url = "jdbc:sqlite:banking";
@@ -19,14 +19,13 @@ public class InsertApp {
         return con;
     }
 
-    public void insert(String cardNu, String pinNu, int balance) {
-        String sql = "INSERT INTO CARD (number, pin, balance) VALUES (?,?,?)";
-
+    public void create() {
+        String sql = "CREATE TABLE IF NOT EXISTS card(" +
+                "id INTEGER PRIMARY KEY," +
+                "first_name TEXT(20) NOT NULL," +
+                "last_name TEXT(20) NOT NULL)";
         try (Connection con = this.connect()) {
             try (PreparedStatement pstm = con.prepareStatement(sql)) {
-                pstm.setString(1, cardNu);
-                pstm.setString(2, pinNu);
-                pstm.setInt(3, balance);
                 pstm.executeUpdate();
             }
         } catch (SQLException e) {

@@ -16,6 +16,7 @@ public class BankingApplication {
     private static final InsertApp insertApp = new InsertApp();
     private static final SelectApp selectApp = new SelectApp();
     private static final UpdateApp updateApp = new UpdateApp();
+    private static final CreateApp createApp = new CreateApp();
 
     private static final Random cardNum = new Random();
     private static final Random pinNum = new Random();
@@ -34,11 +35,14 @@ public class BankingApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(BankingApplication.class, args);
 
+        // create table if not exists
+        createApp.create();
+
         while (outerLoop) {
             System.out.printf(
                     "1. Create an account%n" +
-                            "2. Log into account%n" +
-                            "0. Exit%n"
+                    "2. Log into account%n" +
+                    "0. Exit%n"
             );
             int menuChoice = scanner.nextInt();
             switch (menuChoice) {
