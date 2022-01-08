@@ -35,7 +35,6 @@ public class BankingApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(BankingApplication.class, args);
 
-        // create table if not exists
         createApp.create();
 
         while (outerLoop) {
