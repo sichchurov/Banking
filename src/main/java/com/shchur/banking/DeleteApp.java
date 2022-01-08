@@ -3,7 +3,7 @@ package com.shchur.banking;
 import java.sql.*;
 
 
-public class UpdateApp {
+public class DeleteApp {
 
     private final SelectApp selectApp = new SelectApp();
     private final Card card = new Card();

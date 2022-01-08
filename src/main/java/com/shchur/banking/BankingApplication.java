@@ -80,10 +80,18 @@ public class BankingApplication {
                                 case 1 -> System.out.printf("Your balance is %n%d%n", selectApp.selectBalance(numberCheck));
                                 case 2 -> {
                                     System.out.println("Enter income");
-                                    int income = scanner.nextInt();
-                                    updateApp.update(income, numberCheck);
+                                    long income = scanner.nextLong();
+                                    updateApp.addIncome(income, numberCheck);
+                                    System.out.println("Income was added!");
                                 }
-                                case 3 -> System.out.println("do transfer");
+                                case 3 -> {
+                                    System.out.println("Enter card number:");
+                                    String cardToTransfer = scanner.next();
+                                    System.out.println("Enter how much money you want to transfer:");
+                                    long moneyToTransfer = scanner.nextLong();
+                                    updateApp.doTransfer(moneyToTransfer, numberCheck, cardToTransfer);
+
+                                }
                                 case 4 -> System.out.println("close account");
                                 case 5 -> {
                                     innerLoop = false;
