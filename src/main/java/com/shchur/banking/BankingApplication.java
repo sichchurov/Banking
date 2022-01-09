@@ -15,8 +15,9 @@ public class BankingApplication {
 
     private static final InsertApp insertApp = new InsertApp();
     private static final SelectApp selectApp = new SelectApp();
-    private static final UpdateApp updateApp = new UpdateApp();
     private static final CreateApp createApp = new CreateApp();
+    private static final DeleteApp deleteApp = new DeleteApp();
+    private static final AccountActions accountActions = new AccountActions();
 
     private static final Random cardNum = new Random();
     private static final Random pinNum = new Random();
@@ -78,21 +79,9 @@ public class BankingApplication {
                             int accountMenuChoice = scanner.nextInt();
                             switch (accountMenuChoice) {
                                 case 1 -> System.out.printf("Your balance is %n%d%n", selectApp.selectBalance(numberCheck));
-                                case 2 -> {
-                                    System.out.println("Enter income");
-                                    long income = scanner.nextLong();
-                                    updateApp.addIncome(income, numberCheck);
-                                    System.out.println("Income was added!");
-                                }
-                                case 3 -> {
-                                    System.out.println("Enter card number:");
-                                    String cardToTransfer = scanner.next();
-                                    System.out.println("Enter how much money you want to transfer:");
-                                    long moneyToTransfer = scanner.nextLong();
-                                    updateApp.doTransfer(moneyToTransfer, numberCheck, cardToTransfer);
-
-                                }
-                                case 4 -> System.out.println("close account");
+                                case 2 -> accountActions.makeIncome(numberCheck);
+                                case 3 -> accountActions.makeTransfer(numberCheck);
+                                case 4 -> deleteApp.deleteAccount(numberCheck);
                                 case 5 -> {
                                     innerLoop = false;
                                     System.out.println("You have successfully logged out!");

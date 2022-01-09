@@ -20,11 +20,11 @@ public class UpdateApp {
         return con;
     }
 
-    public void addIncome(long income, String numberCheck) {
-        String sql = "UPDATE card SET balance = balance + " + income + " WHERE number = " + numberCheck;
+    public void addIncome(long money, String cardIn) {
+        String income = "UPDATE card SET balance = balance + " + money + " WHERE number = " + cardIn;
 
         try (Connection con = this.connect()) {
-            try (PreparedStatement pstm = con.prepareStatement(sql)) {
+            try (PreparedStatement pstm = con.prepareStatement(income)) {
                 pstm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -32,47 +32,51 @@ public class UpdateApp {
         }
     }
 
-    public void doTransfer(long money, String cardOut, String cardTo) {
-        String outCome = "UPDATE card SET balance = balance - " + money + " WHERE number = " + cardOut;
+    public void addOutcome(long money, String cardOut, String cardTo) {
+        String outcome = "UPDATE card SET balance = balance - " + money + " WHERE number = " + cardOut;
 
-        String inCome = "UPDATE card SET balance = balance + " + money + " WHERE number = " + cardTo;
-
-
+        String transfer = "UPDATE card SET balance = balance + " + money + " WHERE number = " + cardTo;
 
         try (Connection con = this.connect()) {
 
             con.setAutoCommit(false);
 
-            Savepoint savepoint1 = con.setSavepoint();
+            Savepoint savepoint = con.setSavepoint();
 
-            try (PreparedStatement pstm = con.prepareStatement(outCome)) {
+            try (PreparedStatement pstm = con.prepareStatement(outcome)) {
                 pstm.executeUpdate();
             }
 
-            try (PreparedStatement pstm = con.prepareStatement(inCome)) {
+            try (PreparedStatement pstm = con.prepareStatement(transfer)) {
                 pstm.executeUpdate();
             }
 
             if ((selectApp.selectBalance(cardOut) - money) < 0) {
-                con.rollback(savepoint1);
+                con.rollback(savepoint);
                 System.out.println("Not enough money!");
-            } else if (cardOut.equals(cardTo)) {
-                con.rollback(savepoint1);
-                System.out.println("You can't transfer money to the same account!");
-            } else if (!card.checkCard(cardTo)) {
-                con.rollback(savepoint1);
-                System.out.println("Probably you made a mistake in the card number. Please try again!");
-            } else if (!selectApp.selectAllNumbers().contains(cardTo)) {
-                con.rollback(savepoint1);
-                System.out.println("Such a card does not exist.");
             } else {
-                System.out.println("Success!");
+                System.out.println("Success");
             }
-
             con.commit();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public boolean doTransfer(String cardOut, String cardTo) {
+        if (cardOut.equals(cardTo)) {
+            System.out.println("You can't transfer money to the same account!");
+            return false;
+        }
+        if (!card.checkCard(cardTo)) {
+            System.out.println("Probably you made a mistake in the card number. Please try again!");
+            return false;
+        }
+        if (!selectApp.selectAllNumbers().contains(cardTo)) {
+            System.out.println("Such a card does not exist.");
+            return false;
+        }
+        return true;
     }
 }
